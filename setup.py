@@ -6,7 +6,7 @@ with open("README.md", "r") as _file:
 
 setup(
 	name="truecaser",
-	version="0.0.5",
+	version="0.0.6",
 	description="Predict and restore word casing",
 	py_modules=[
 		"truecaser",
