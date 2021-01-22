@@ -23,10 +23,19 @@ def programExists(program: str) -> bool:
 
 	readProcess(process)
 
+	if process.returncode == 0:
+		return True
+	else:
+		return False
 
 
-#def crfSuiteExists() -> bool:
+def crfSuiteExists() -> bool:
+	return programExists("crfsuite")
 
+'''
+def crfSuiteExists() -> bool:
+	return programExists("crfsuite")
+'''
 
 
 def generateTokenSets():
@@ -473,7 +482,7 @@ def parseArgs() -> dict:
 	return vars(parser.parse_args())
 
 
-programExists("crfsuite")
+print(crfSuiteExists())
 
 
 	
