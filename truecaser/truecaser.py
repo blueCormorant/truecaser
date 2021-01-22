@@ -23,7 +23,8 @@ def programExists(program: str) -> bool:
 								stdout=subprocess.PIPE,
 								stderr=subprocess.PIPE)
 
-	#readProcess(process)
+	readProcess(process)
+	
 
 	if process.returncode == 0:
 		return True
@@ -429,13 +430,6 @@ def crfSuitePredict():
 
 def configureSettings(dirName: str, fileName: str, libName: str):
 
-	command = f"mkdir config ; echo '{dirName}\\n{fileName}\\n{libName}' > config/config.txt"
-
-	process = subprocess.Popen(command,
-								shell=True,
-								stdout=subprocess.PIPE,
-								stderr=subprocess.PIPE)
-
 	if libName == "crfsuite":
 		if not crfSuiteExists():
 			raise Exception("crfsuite is not installed")
@@ -444,7 +438,15 @@ def configureSettings(dirName: str, fileName: str, libName: str):
 			raise Exception("python-crfsuite is not installed")
 	else:
 		raise Exception("Must specify crfsuite or python-crfsuite")
-		
+
+	command = f"mkdir config ; echo '{dirName}\\n{fileName}\\n{libName}' > config/config.txt"
+
+	process = subprocess.Popen(command,
+								shell=True,
+								stdout=subprocess.PIPE,
+								stderr=subprocess.PIPE)
+
+	
 
 def readSettings() -> tuple:
 
