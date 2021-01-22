@@ -25,7 +25,7 @@ def programExists(program: str) -> bool:
 
 
 
-def crfSuiteExists() -> bool:
+#def crfSuiteExists() -> bool:
 
 
 
