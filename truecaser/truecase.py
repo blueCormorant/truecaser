@@ -19,7 +19,10 @@ elif args["command"] == "learn":
 elif args["command"] == "predict":
 	crfSuitePredict()
 elif args["command"] == "configure":
-	configureSettings(args["source_directory"], args["token_file"])
+	try:
+		configureSettings(args["source_directory"], args["token_file"], args["crflib"])
+	except Exception as e:
+		print(e)
 elif args["command"] == "restore":
 	restoreTokens()
 

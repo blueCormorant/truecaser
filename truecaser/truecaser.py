@@ -12,6 +12,8 @@ import argparse
 import subprocess
 
 
+
+
 def programExists(program: str) -> bool:
 
 	command = f"command -v {program} >/dev/null 2>&1 || {{ echo >&2 '{program} is required, but it is not installed.  Aborting.'; exit 1; }}"
@@ -21,7 +23,7 @@ def programExists(program: str) -> bool:
 								stdout=subprocess.PIPE,
 								stderr=subprocess.PIPE)
 
-	readProcess(process)
+	#readProcess(process)
 
 	if process.returncode == 0:
 		return True
@@ -32,10 +34,12 @@ def programExists(program: str) -> bool:
 def crfSuiteExists() -> bool:
 	return programExists("crfsuite")
 
-'''
-def crfSuiteExists() -> bool:
-	return programExists("crfsuite")
-'''
+def pyCrfSuiteExists() -> bool:
+	try:
+		import pycrfsuite
+		return True
+	except Exception as e:
+		return False
 
 
 def generateTokenSets():
@@ -423,19 +427,24 @@ def crfSuitePredict():
 
 
 
-def configureSettings(dirName: str, fileName: str):
+def configureSettings(dirName: str, fileName: str, libName: str):
 
-	command = "mkdir config ; "
-	command = command + "echo \"" + dirName + "\\n"
-	command = command + fileName + "\" > config/config.txt"
-	
+	command = f"mkdir config ; echo '{dirName}\\n{fileName}\\n{libName}' > config/config.txt"
+
 	process = subprocess.Popen(command,
 								shell=True,
 								stdout=subprocess.PIPE,
 								stderr=subprocess.PIPE)
 
-	readProcess(process)
-
+	if libName == "crfsuite":
+		if not crfSuiteExists():
+			raise Exception("crfsuite is not installed")
+	elif libName == "python-crfsuite":
+		if not pyCrfSuiteExists():
+			raise Exception("python-crfsuite is not installed")
+	else:
+		raise Exception("Must specify crfsuite or python-crfsuite")
+		
 
 def readSettings() -> tuple:
 
@@ -463,6 +472,7 @@ def parseArgs() -> dict:
 	setupParser = subparsers.add_parser('configure', help='configure settings')
 	setupParser.add_argument('-d', '--source_directory', metavar='', required=True)
 	setupParser.add_argument('-f', '--token_file', metavar='', required=True)
+	setupParser.add_argument('-c', '--crflib', metavar='', required=True)
 	
 	
 	splitParser = subparsers.add_parser('split', help='split token file')
@@ -482,7 +492,5 @@ def parseArgs() -> dict:
 	return vars(parser.parse_args())
 
 
-print(crfSuiteExists())
 
 
-	
